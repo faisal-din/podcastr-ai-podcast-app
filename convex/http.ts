@@ -52,8 +52,6 @@ http.route({
 const validateRequest = async (
   req: Request,
 ): Promise<WebhookEvent | undefined> => {
-  // TODO: update clerk webhook secret
-
   const webhookSecret = process.env.CLERK_WEBHOOK_SECRET!;
   if (!webhookSecret) {
     throw new Error('CLERK_WEBHOOK_SECRET is not defined');
