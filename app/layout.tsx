@@ -3,6 +3,7 @@ import { Manrope } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from 'next-themes';
 import ConvexClerkProvider from './providers/ConvexClerkProvider';
+import { Toaster } from '@/components/ui/sonner';
 
 const manrope = Manrope({ subsets: ['latin'] });
 
@@ -23,7 +24,10 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`${manrope.className}`}>
         <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
-          <ConvexClerkProvider>{children}</ConvexClerkProvider>
+          <ConvexClerkProvider>
+            {children}
+            <Toaster />
+          </ConvexClerkProvider>
         </ThemeProvider>
       </body>
     </html>

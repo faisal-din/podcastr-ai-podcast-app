@@ -28,16 +28,32 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader } from 'lucide-react';
+import { Id } from '@/convex/_generated/dataModel';
+import GeneratePodcast from '@/components/GeneratePodcast';
 
 const voiceCategories = ['alloy', 'shimmer', 'nova', 'echo', 'fable', 'onyx'];
 
 const formSchema = z.object({
   podcastTitle: z.string().min(2),
-  podcastDescription: z.string().min(2),
+  podcastDescription: z.string().min(20),
 });
 
 const CreatePodcast = () => {
+  const [imagePrompt, setImagePrompt] = useState('');
+  const [imageStorageId, setImageStorageId] = useState<Id<'_storage'> | null>(
+    null,
+  );
+  const [imageUrl, setImageUrl] = useState('');
+
+  const [audioUrl, setAudioUrl] = useState('');
+  const [audioStorageId, setAudioStorageId] = useState<Id<'_storage'> | null>(
+    null,
+  );
+  const [audioDuration, setAudioDuration] = useState(0);
+
   const [voiceType, setVoiceType] = useState<string | null>(null);
+  const [voicePrompt, setVoicePrompt] = useState('');
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   //  Define your form.
@@ -144,7 +160,15 @@ const CreatePodcast = () => {
           </div>
 
           <div className='flex flex-col pt-10'>
-            <p>GeneratePodcast</p>
+            <GeneratePodcast
+              setAudioStorageId={setAudioStorageId}
+              setAudio={setAudioUrl}
+              voiceType={voiceType!}
+              audio={audioUrl}
+              voicePrompt={voicePrompt}
+              setVoicePrompt={setVoicePrompt}
+              setAudioDuration={setAudioDuration}
+            />
             <p>GenerateThumbnail</p>
 
             <div className='mt-10 w-full'>
