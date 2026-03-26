@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'lovely-flamingo-139.convex.cloud',
       },
+      {
+        protocol: 'https',
+        hostname: 'uncommon-starfish-163.convex.cloud',
+      },
     ],
   },
 };

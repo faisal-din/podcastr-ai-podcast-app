@@ -30,12 +30,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Loader } from 'lucide-react';
 import { Id } from '@/convex/_generated/dataModel';
 import GeneratePodcast from '@/components/GeneratePodcast';
+import GenerateThumbnail from '../../../components/GenerateThumbnail';
 
 const voiceCategories = ['alloy', 'shimmer', 'nova', 'echo', 'fable', 'onyx'];
 
 const formSchema = z.object({
-  podcastTitle: z.string().min(2),
-  podcastDescription: z.string().min(20),
+  podcastTitle: z.string().min(2, 'Title must be at least 2 characters'),
+  podcastDescription: z
+    .string()
+    .min(20, 'Description must be at least 20 characters'),
 });
 
 const CreatePodcast = () => {
@@ -69,6 +72,8 @@ const CreatePodcast = () => {
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     console.log(data);
   };
+
+  // console.log('uploaded image from create-podcast page: ', imageUrl);
 
   return (
     <section className='mt-10 flex flex-col'>
@@ -169,7 +174,13 @@ const CreatePodcast = () => {
               setVoicePrompt={setVoicePrompt}
               setAudioDuration={setAudioDuration}
             />
-            <p>GenerateThumbnail</p>
+            <GenerateThumbnail
+              setImage={setImageUrl}
+              setImageStorageId={setImageStorageId}
+              image={imageUrl}
+              imagePrompt={imagePrompt}
+              setImagePrompt={setImagePrompt}
+            />
 
             <div className='mt-10 w-full'>
               <Button
