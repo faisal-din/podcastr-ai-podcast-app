@@ -31,6 +31,10 @@ import { Loader } from 'lucide-react';
 import { Id } from '@/convex/_generated/dataModel';
 import GeneratePodcast from '@/components/GeneratePodcast';
 import GenerateThumbnail from '../../../components/GenerateThumbnail';
+import { toast } from 'sonner';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useRouter } from 'next/navigation';
 
 const voiceCategories = ['alloy', 'shimmer', 'nova', 'echo', 'fable', 'onyx'];
 
@@ -42,6 +46,7 @@ const formSchema = z.object({
 });
 
 const CreatePodcast = () => {
+  const router = useRouter();
   const [imagePrompt, setImagePrompt] = useState('');
   const [imageStorageId, setImageStorageId] = useState<Id<'_storage'> | null>(
     null,
@@ -59,6 +64,8 @@ const CreatePodcast = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const createPodcast = useMutation(api.podcasts.createPodcast);
+
   //  Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,8 +76,45 @@ const CreatePodcast = () => {
   });
 
   //  Define a submit handler.
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      setIsSubmitting(true);
+      if (!audioUrl || !imageUrl || !voiceType) {
+        toast.error('Please generate audio and image', {
+          style: {
+            backgroundColor: '#FF4D4F',
+            color: '#fff',
+          },
+        });
+        setIsSubmitting(false);
+        throw new Error('Please generate audio and image');
+      }
+
+      const podcast = await createPodcast({
+        podcastTitle: data.podcastTitle,
+        podcastDescription: data.podcastDescription,
+        audioUrl,
+        imageUrl,
+        voiceType,
+        imagePrompt,
+        voicePrompt,
+        views: 0,
+        audioDuration,
+        audioStorageId: audioStorageId!,
+        imageStorageId: imageStorageId!,
+      });
+      toast.success('Podcast created successfully');
+      setIsSubmitting(false);
+      router.push('/');
+    } catch (error) {
+      console.log('Error submitting podcast: ', error);
+      toast.error('Error submitting podcast', {
+        style: {
+          backgroundColor: '#FF4D4F',
+          color: '#fff',
+        },
+      });
+    }
   };
 
   // console.log('uploaded image from create-podcast page: ', imageUrl);
