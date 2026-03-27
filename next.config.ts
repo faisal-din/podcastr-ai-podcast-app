@@ -6,11 +6,15 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'lovely-flamingo-139.convex.cloud',
+        hostname: 'img.clerk.com',
       },
       {
         protocol: 'https',
         hostname: 'uncommon-starfish-163.convex.cloud',
+      },
+      {
+        protocol: 'https',
+        hostname: 'gemini.google.com',
       },
     ],
   },
