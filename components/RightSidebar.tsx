@@ -8,14 +8,23 @@ import EmblaCarousel from './Carousel';
 import { useRouter } from 'next/navigation';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
+import { useAudio } from '@/providers/AudioProvider';
+import { cn } from '@/lib/utils';
 
 const RightSidebar = () => {
   const { isSignedIn, user } = useUser();
   const topPodcasters = useQuery(api.users.getTopUserByPodcastCount);
   const router = useRouter();
 
+  const { audio } = useAudio();
+
   return (
-    <section className='right_sidebar h-[calc(100vh-5px)]'>
+    <section
+      className={cn('right_sidebar h-[calc(100vh-5px)]', {
+        'h-[calc(100vh-140px)]': audio?.audioUrl,
+      })}
+    >
+      {' '}
       {isSignedIn && (
         <Link href={`/profile/${user?.id}`} className='flex gap-3 pb-12'>
           <UserButton />
@@ -32,8 +41,7 @@ const RightSidebar = () => {
           </div>
         </Link>
       )}
-
-      <section className=''>
+      <section>
         <Header headerTitle='Fans Like You' />
         <EmblaCarousel fansLikeDetail={topPodcasters!} />
       </section>

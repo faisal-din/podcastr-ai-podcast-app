@@ -1,36 +1,27 @@
 'use client';
 
+import { useQuery } from 'convex/react';
 import EmptyState from '@/components/EmptyState';
 import LoaderSpinner from '@/components/LoaderSpinner';
 import PodcastCard from '@/components/PodcastCard';
 import PodcastDetailPlayer from '@/components/PodcastDetailPlayer';
 import { api } from '@/convex/_generated/api';
-import { Id } from '@/convex/_generated/dataModel';
 import { useUser } from '@clerk/nextjs';
-import { useQuery } from 'convex/react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import { Id } from '@/convex/_generated/dataModel';
 
 const PodcastDetails = () => {
-  // Get the dynamic route param
-  const params = useParams();
-  const podcastId = params?.podcastId;
+  const { podcastId } = useParams();
 
   const { user } = useUser();
 
-  // Handle missing podcastId
-  if (!podcastId) {
-    return (
-      <p className='text-white-1 text-center mt-10'>
-        Podcast ID is missing in the URL.
-      </p>
-    );
-  }
-
-  const podcast = useQuery(api.podcasts.getPodcastById, { podcastId });
+  const podcast = useQuery(api.podcasts.getPodcastById, {
+    podcastId: podcastId as Id<'podcasts'>,
+  });
 
   const similarPodcasts = useQuery(api.podcasts.getPodcastByVoiceType, {
-    podcastId,
+    podcastId: podcastId as Id<'podcasts'>,
   });
 
   const isOwner = user?.id === podcast?.authorId;
